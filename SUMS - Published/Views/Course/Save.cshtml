@@ -1,0 +1,109 @@
+﻿@using UniversityCourseAndResultManagementSystemApp.Models
+
+@{
+    ViewBag.Title = "Save";
+    List<Department> listOfDepartment = ViewBag.Departments;
+    List<Semester> listOfSemester = ViewBag.Semesters;
+}
+
+<div class="well bs-component">
+    <form class="form-horizontal" id="myForm" role="form" method="post">
+        <fieldset>
+            <legend>Save Course</legend>
+            <span class="success">@ViewBag.SaveMessage</span>
+            <span class="error">@ViewBag.ExErrorMessage</span>
+            <div class="form-group">
+                <label for="Code" class="col-lg-2 control-label">Code</label>
+                <div class="col-lg-10">
+                    <input class="form-control" id="Code" name="Code" placeholder="Code" type="text"><span class="error">@ViewBag.CodeErrorMessage</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="Name" class="col-lg-2 control-label">Name</label>
+                <div class="col-lg-10">
+                    <input class="form-control" id="Name" name="Name" placeholder="Name" type="text"><span class="error">@ViewBag.NameErrorMessage</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="Credit" class="col-lg-2 control-label">Credit</label>
+                <div class="col-lg-10">
+                    <input class="form-control" id="Credit" name="Credit" placeholder="Credit" type="text"><span class="error">@ViewBag.CreditErrorMessage</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="Description" class="col-lg-2 control-label">Description</label>
+                <div class="col-lg-10">
+                    <textarea class="form-control" id="Description" name="Description" placeholder="Description" type="text"></textarea><span class="error">@ViewBag.DescriptionErrorMessage</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="DepartmentId" class="col-lg-2 control-label">Department</label>
+                <div class="col-lg-10">
+
+                    <select class="form-control" id="DepartmentId" name="DepartmentId">
+                        <option value="">--Select--</option>
+                        @foreach (Department dept in listOfDepartment)
+                        {
+                            <option value="@dept.Id">@dept.Name</option>
+                        }
+                    </select>
+                    <span class="error">@ViewBag.DepartmentErrorMessage</span>
+
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="SemesterId" class="col-lg-2 control-label">Semester</label>
+                <div class="col-lg-10">
+
+                    <select class="form-control" id="SemesterId" name="SemesterId">
+                        <option value="">--Select--</option>
+                        @foreach (Semester semester in listOfSemester)
+                        {
+                            <option value="@semester.Id">@semester.Name</option>
+                        }
+                    </select>
+                    <span class="error">@ViewBag.SemesterErrorMessage</span>
+
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-lg-10 col-lg-offset-2">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</div>
+
+@section scripts
+{
+    <script src="~/Scripts/jquery-2.2.3.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#myForm").validate({
+                rules: {
+                    Code: "required",
+                    Name: "required",
+                    Credit: {
+                        required: true,
+                        number: true
+                    },
+                    DepartmentId: "required",
+                    SemesterId: "required"
+                },
+
+                messages: {
+                    Code: "Please provide code.",
+                    Name: "Please provide name.",
+                    Credit: {
+                        required: "Please provide credit.",
+                        number: "Credit should be numeric value."
+                    },
+                    DepartmentId: "Please provide department.",
+                    SemesterId: "Please provide semester."
+                }
+            });
+        });
+    </script>
+}

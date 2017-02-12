@@ -1,0 +1,44 @@
+﻿@using UniversityCourseAndResultManagementSystemApp.Models
+
+@{
+    ViewBag.Title = "Get";
+    List<Teacher> listOfTeacher = ViewBag.Teachers;
+}
+
+<div class="well bs-component">
+    <fieldset>
+        <legend>Teacher List</legend>
+        <span class="error">@ViewBag.ExErrorMessage</span>
+
+        <table class="table table-responsive table-striped table-header-block">
+            <thead>
+                <tr>
+                    <th>Teacher Name</th>
+                    <th>Address</th>
+                    <th>Email</th>
+                    <th>ContactNo</th>
+                    <th>DesignationName</th>
+                    <th>DepartmentName</th>
+                    <th>CreditToBeTaken</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (listOfTeacher != null)
+                {
+                    foreach (Teacher teacher in listOfTeacher)
+                    {
+                        <tr>
+                            <td>@teacher.Name</td>
+                            <td>@teacher.Address</td>
+                            <td>@teacher.Email</td>
+                            <td>@teacher.ContactNo</td>
+                            <td>@teacher.DesignationName</td>
+                            <td>@teacher.DepartmentName</td>
+                            <td>@teacher.CreditToBeTaken</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </fieldset>
+</div>

@@ -1,0 +1,52 @@
+﻿
+@{
+    ViewBag.Title = "Save";
+}
+
+<div class="well bs-component">
+    <form class="form-horizontal" id="myForm" role="form" method="post">
+        <fieldset>
+            <legend>Save Department</legend>
+            <span class="success">@ViewBag.SaveMessage</span>
+            <span class="error">@ViewBag.ExErrorMessage</span>
+            <div class="form-group">
+                <label for="Code" class="col-lg-2 control-label">Code</label>
+                <div class="col-lg-10">
+                    <input class="form-control" id="Code" name="Code" placeholder="Code" type="text"><span class="error">@ViewBag.CodeErrorMessage</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="Name" class="col-lg-2 control-label">Name</label>
+                <div class="col-lg-10">
+                    <input class="form-control" id="Name" name="Name" placeholder="Name" type="text"><span class="error">@ViewBag.NameErrorMessage</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-lg-10 col-lg-offset-2">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</div>
+
+@section scripts
+{
+    <script src="~/Scripts/jquery-2.2.3.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#myForm").validate({
+                rules: {
+                    Code: "required",
+                    Name: "required"
+                },
+
+                messages: {
+                    Code: "Please provide code.",
+                    Name: "Please provide name."
+                }
+            });
+        });
+    </script>
+}

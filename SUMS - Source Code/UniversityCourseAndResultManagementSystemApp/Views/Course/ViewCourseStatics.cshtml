@@ -1,0 +1,62 @@
+﻿@using UniversityCourseAndResultManagementSystemApp.Models
+
+@{
+    ViewBag.Title = "ViewCourseStatics";
+    List<Department> listOfDepartment = ViewBag.Departments;
+}
+
+<div class="well bs-component">
+    <fieldset>
+        <legend>View Course Statics</legend>
+        <span class="error">@ViewBag.ExErrorMessage</span>
+        <div class="form-group">
+            <label for="DepartmentId" class="col-lg-2 control-label">Department</label>
+            <div class="col-lg-10">
+                <select class="form-control" id="DepartmentId" name="DepartmentId">
+                    <option value="">--Select--</option>
+                    @if (listOfDepartment != null)
+                    {
+                        foreach (Department dept in listOfDepartment)
+                        {
+                            <option value="@dept.Id">@dept.Name</option>
+                        }
+                    }
+                </select>
+                <span class="error">@ViewBag.DepartmentErrorMessage</span>
+            </div>
+        </div>
+        <br />
+        <hr />
+        <table class="table table-responsive table-striped table-header-block" id="ViewCourseStatics"></table>
+    </fieldset>
+</div>
+
+@section scripts
+{
+    <script src="~/Scripts/jquery-2.2.3.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#DepartmentId").change(function () {
+                var deptId = $("#DepartmentId").val();
+                $("#ViewCourseStatics").empty();
+                var json = { departmentId: deptId };
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("GetCourseStaticsByDepartmentId", "Course")',
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(json),
+                    success: function (data) {
+                        //alert(data);
+                        $("#ViewCourseStatics").append('<thead><tr><th>Code</th><th>Name/Title</th><th>Semester</th><th>Assign To</th></tr></thead><tbody>');
+                        $.each(data, function (key, value) {
+                            //alert(key);
+                            $("#ViewCourseStatics").append('<tr><td>' + value.Code + '</td><td>' + value.Name + '</td><td>' + value.SemesterName + '</td><td>' + value.AssignTeacherName + '</td></tr></tbody>');
+                        });
+                        $("#ViewCourseStatics").append('</tbody>');
+                    }
+                });
+            });
+        });
+    </script>
+}

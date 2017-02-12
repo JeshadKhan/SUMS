@@ -1,0 +1,122 @@
+﻿@using UniversityCourseAndResultManagementSystemApp.Models
+
+@{
+    ViewBag.Title = "ViewResult";
+    List<Student> listOfStudent = ViewBag.Students;
+}
+
+<div class="well bs-component">
+    <fieldset>
+        <legend>View Result</legend>
+        <span class="error">@ViewBag.ExErrorMessage</span>
+        <form class="form-horizontal" id="myForm" role="form" method="post">
+            <div class="form-group">
+                <label for="StudentId" class="col-lg-2 control-label">Student Reg. No.</label>
+                <div class="col-lg-10">
+                    <select class="form-control" id="StudentId" name="StudentId">
+                        <option value="">--Select--</option>
+                        @if (listOfStudent != null)
+                        {
+                            foreach (Student student in listOfStudent)
+                            {
+                                <option value="@student.Id">@student.RegNo</option>
+                            }
+                        }
+                    </select>
+                    <span class="error">@ViewBag.StudentErrorMessage</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="Name" class="col-lg-2 control-label">Name</label>
+                <div class="col-lg-10">
+                    <input class="form-control" id="Name" name="Name" readonly="readonly" type="text">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="Email" class="col-lg-2 control-label">Email</label>
+                <div class="col-lg-10">
+                    <input class="form-control" id="Email" name="Email" readonly="readonly" type="text">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="DepartmentName" class="col-lg-2 control-label">Department</label>
+                <div class="col-lg-10">
+                    <input class="form-control" id="DepartmentName" name="DepartmentName" readonly="readonly" type="text">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-lg-10 col-lg-offset-2">
+                    <button type="submit" class="btn btn-primary">Make PDF</button>
+                </div>
+            </div>
+        </form>
+        <hr />
+        <table class="table table-responsive table-striped table-header-block" id="ViewResult"></table>
+    </fieldset>
+</div>
+
+@section scripts
+{
+    <script src="~/Scripts/jquery-2.2.3.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#myForm").validate({
+                rules: {
+                    StudentId: "required"
+                },
+
+                messages: {
+                    StudentId: "Please select Student."
+                }
+            });
+
+
+            $("#StudentId").change(function () {
+                var sId = $("#StudentId").val();
+                $("#Name").empty();
+                $("#Email").empty();
+                $("#DepartmentName").empty();
+                //$("#DepartmentId").empty();
+                var json = { studentId: sId };
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("GetStudentByStudentId", "Student")',
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(json),
+                    success: function (data) {
+                        //alert(data);
+                        $.each(data, function (key, value) {
+                            //alert(key);
+                            $("#Name").val(value.Name);
+                            $("#Email").val(value.Email);
+                            $("#DepartmentName").val(value.DepartmentName);
+                            //$("#DepartmentId").val(value.DepartmentId);
+                        });
+                    }
+                });
+            });
+
+            $("#StudentId").change(function () {
+                var sId = $("#StudentId").val();
+                $("#ViewResult").empty();
+                var json = { studentId: sId };
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("GetCourseByStudentId", "Student")',
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(json),
+                    success: function (data) {
+                        //alert(data);
+                        $("#ViewResult").append('<thead><tr><td>Course Code</td><td>Name</td><td>Grade</td></tr></thead><tbody>');
+                        $.each(data, function (key, value) {
+                            //alert(key);
+                            $("#ViewResult").append('<tr><td>' + value.CourseCode + '</td><td>' + value.CourseName + '</td><td>' + value.Grade + '</td></tr>');
+                        });
+                        $("#ViewResult").append('</tbody>');
+                    }
+                });
+            });
+        });
+    </script>
+}

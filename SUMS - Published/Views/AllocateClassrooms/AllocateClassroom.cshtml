@@ -1,0 +1,137 @@
+﻿@using UniversityCourseAndResultManagementSystemApp.Models
+
+@{
+    ViewBag.Title = "AllocateClassroom";
+    List<Department> listOfDepartment = ViewBag.Departments;
+    List<RoomNumber> listOfRoomNo = ViewBag.RoomNoList;
+}
+
+<div class="well bs-component">
+    <form class="form-horizontal" id="myForm" role="form" method="post">
+        <fieldset>
+            <legend>Allocate Classroom</legend>
+            <span class="success">@ViewBag.SaveMessage</span>
+            <span class="error">@ViewBag.ExErrorMessage</span>
+            <div class="form-group">
+                <label for="DepartmentId" class="col-lg-2 control-label">Department</label>
+                <div class="col-lg-10">
+                    <select class="form-control" id="DepartmentId" name="DepartmentId">
+                        <option value="">--Select--</option>
+                        @if (listOfDepartment != null)
+                        {
+                            foreach (Department dept in listOfDepartment)
+                            {
+                                <option value="@dept.Id">@dept.Name</option>
+                            }
+                        }
+                    </select>
+                    <span class="error">@ViewBag.DepartmentErrorMessage</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="CourseId" class="col-lg-2 control-label">Course</label>
+                <div class="col-lg-10">
+                    <select class="form-control" id="CourseId" name="CourseId">
+                        <option value="">--Select--</option>
+                    </select>
+                    <span class="error">@ViewBag.CourseErrorMessage</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="RoomNo" class="col-lg-2 control-label">Room No</label>
+                <div class="col-lg-10">
+                    <select class="form-control" id="RoomNo" name="RoomNo">
+                        <option value="">--Select--</option>
+                        @if (listOfRoomNo != null)
+                        {
+                            foreach (RoomNumber roomNo in listOfRoomNo)
+                            {
+                                <option value="@roomNo.RoomNo">@roomNo.RoomNo</option>
+                            }
+                        }
+                    </select>
+                    <span class="error">@ViewBag.RoomNoErrorMessage</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="Day" class="col-lg-2 control-label">Day</label>
+                <div class="col-lg-10">
+                    <select class="form-control" id="Day" name="Day">
+                        <option value="">--Select--</option>
+                        <option value="Saturday">Saturday</option>
+                        <option value="Sunday">Sunday</option>
+                        <option value="Monday">Monday</option>
+                        <option value="Tuesday">Tuesday</option>
+                        <option value="Wednesday">Wednesday</option>
+                        <option value="Thursday">Thursday</option>
+                        <option value="Friday">Friday</option>
+                    </select>
+                    <span class="error">@ViewBag.DayErrorMessage</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="FromTime" class="col-lg-2 control-label">From</label>
+                <div class="col-lg-10">
+                    <input type="text" class="form-control" id="FromTime" name="FromTime" /><span class="error">@ViewBag.FromTimeErrorMessage</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="ToTime" class="col-lg-2 control-label">To</label>
+                <div class="col-lg-10">
+                    <input type="text" class="form-control" id="ToTime" name="ToTime" /><span class="error">@ViewBag.ToTimeErrorMessage</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-lg-10 col-lg-offset-2">
+                    <button type="submit" class="btn btn-primary">Allocate</button>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</div>
+
+@section scripts
+{
+    <script src="~/Scripts/jquery-2.2.3.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#FromTime').wickedpicker();
+            $('#ToTime').wickedpicker();
+
+
+            $("#DepartmentId").change(function () {
+                var deptId = $("#DepartmentId").val();
+                $("#CourseId").empty();
+                var json = { departmentId: deptId };
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("GetCourseByDepartmentId", "AllocateClassrooms")',
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(json),
+                    success: function (data) {
+                        //alert(data);
+                        $("#CourseId").append('<option value="">--Select--</option>');
+                        $.each(data, function (key, value) {
+                            //alert(key);
+                            $("#CourseId").append('<option value=' + value.Id + '>' + value.Name + '</option>');
+                        });
+                    }
+                });
+            });
+
+
+            $("#myForm").validate({
+                rules: {
+                    FromTime: "required",
+                    ToTime: "required"
+                },
+
+                messages: {
+                    FromTime: "Please provide from time.",
+                    ToTime: "Please provide to time."
+                }
+            });
+        });
+    </script>
+}

@@ -1,0 +1,167 @@
+﻿@using UniversityCourseAndResultManagementSystemApp.Models
+
+@{
+    ViewBag.Title = "EnrollCourse";
+    List<Student> listOfStudent = ViewBag.Students;
+    List<Course> listOfCourse = ViewBag.Courses;
+}
+
+<div class="well bs-component">
+    <form class="form-horizontal" id="myForm" role="form" method="post">
+        <fieldset>
+            <legend>Enroll In a Cousre</legend>
+            <span class="success">@ViewBag.SaveMessage</span>
+            <span class="error">@ViewBag.ExErrorMessage</span>
+            <div class="form-group">
+                <label for="StudentId" class="col-lg-2 control-label">Student</label>
+                <div class="col-lg-10">
+                    <select class="form-control" id="StudentId" name="StudentId">
+                        <option value="">--Select--</option>
+                        @if (listOfStudent != null)
+                        {
+                            foreach (Student student in listOfStudent)
+                            {
+                                <option value="@student.Id">@student.RegNo</option>
+                            }
+                        }
+                    </select>
+                    <span class="error">@ViewBag.StudentErrorMessage</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="Name" class="col-lg-2 control-label">Name</label>
+                <div class="col-lg-10">
+                    <input class="form-control" id="Name" name="Name" readonly="readonly" type="text">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="Email" class="col-lg-2 control-label">Email</label>
+                <div class="col-lg-10">
+                    <input class="form-control" id="Email" name="Email" readonly="readonly" type="text">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="DepartmentName" class="col-lg-2 control-label">Department</label>
+                <div class="col-lg-10">
+                    <input class="form-control" id="DepartmentName" name="DepartmentName" readonly="readonly" type="text">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="CourseId" class="col-lg-2 control-label">Course Code</label>
+                <div class="col-lg-10">
+                    <select class="form-control" id="CourseId" name="CourseId">
+                        <option value="">--Select--</option>
+                        @if (listOfCourse != null)
+                        {
+                            foreach (Course course in listOfCourse)
+                            {
+                                <option value="@course.Id">@course.Name</option>
+                            }
+                        }
+                    </select>
+                    <span class="error">@ViewBag.CourseErrorMessage</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="Date" class="col-lg-2 control-label">Date</label>
+                <div class="col-lg-10">
+                    <input class="form-control" id="Date" name="Date" placeholder="Date" type="text" value="@ViewBag.Today"><span class="error">@ViewBag.DateErrorMessage</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-lg-10 col-lg-offset-2">
+                    <button type="submit" class="btn btn-primary">Enroll</button>
+                </div>
+            </div>
+
+            <div class="form-group" style="visibility: hidden">
+                <label for="DepartmentId" class="col-lg-2 control-label">Department Id</label>
+                <div class="col-lg-10">
+                    <input class="form-control" id="DepartmentId" name="DepartmentId" type="text" readonly="readonly">
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</div>
+
+@section scripts
+{
+    <script src="~/Scripts/jquery-2.2.3.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <link href="~/Content/bootstrap-datepicker.min.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap-datepicker.standalone.min.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap-datepicker3.min.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap-datepicker3.standalone.min.css" rel="stylesheet" />
+    <script src="~/Scripts/bootstrap-datepicker.min.js"></script>
+    <script>
+    $(document).ready(function () {
+        $("#Date").datepicker({
+            autoclose: true,
+            todayHighlight: true
+        });
+
+
+        $("#myForm").validate({
+            rules: {
+                StudentId: "required",
+                CourseId: "required",
+                Date: "required"
+            },
+
+            messages: {
+                StudentId: "Please select Student.",
+                CourseId: "Please select course.",
+                Date: "Please select date."
+            }
+        });
+
+
+        $("#StudentId").change(function () {
+            var sId = $("#StudentId").val();
+            $("#Name").empty();
+            $("#Email").empty();
+            $("#DepartmentName").empty();
+            $("#DepartmentId").empty();
+            var json = { studentId: sId };
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("GetStudentByStudentId", "Student")',
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(json),
+                success: function (data) {
+                    //alert(data);
+                    $.each(data, function (key, value) {
+                        //alert(key);
+                        $("#Name").val(value.Name);
+                        $("#Email").val(value.Email);
+                        $("#DepartmentName").val(value.DepartmentName);
+                        $("#DepartmentId").val(value.DepartmentId);
+                    });
+
+                    test();
+                }
+            });
+        });
+
+        @*$("#StudentId").change(function () {
+                var deptId = $("#DepartmentId").val();
+                $("#CourseId").empty();
+                var json = { departmentId: deptId };
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("GetCourseByDepartmentId", "Student")',
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(json),
+                    success: function (data) {
+                        //alert(data);
+                        $("#CourseId").append('<option value="">--Select--</option>');
+                        $.each(data, function (key, value) {
+                            //alert(key);
+                            $("#CourseId").append('<option value=' + value.Id + '>' + value.Code + '</option>');
+                        });
+                    }
+                });
+            });*@
+    });
+    </script>
+}

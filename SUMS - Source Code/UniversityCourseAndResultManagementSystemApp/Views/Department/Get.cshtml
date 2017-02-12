@@ -1,0 +1,33 @@
+﻿@using UniversityCourseAndResultManagementSystemApp.Models
+
+@{
+    ViewBag.Title = "Get";
+    List<Department> listOfDepartment = ViewBag.Departments;
+}
+
+<div class="well bs-component">
+    <fieldset>
+        <legend>Department List</legend>
+        <span class="error">@ViewBag.ExErrorMessage</span>
+        
+        <table class="table table-responsive table-striped table-header-block">
+            <thead>
+                <tr>
+                    <th>Code</th>
+                    <th>Name</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (Department dept in listOfDepartment)
+                {
+                    <tr>
+                        <td>@dept.Code</td>
+                        <td>@dept.Name</td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    </fieldset>
+</div>

@@ -1,0 +1,123 @@
+﻿@using UniversityCourseAndResultManagementSystemApp.Models
+
+@{
+    ViewBag.Title = "Save";
+    List<Designation> listOfDesignations = ViewBag.Designations;
+    List<Department> listOfDepartment = ViewBag.Departments;
+}
+
+<div class="well bs-component">
+    <form class="form-horizontal" id="myForm" role="form" method="post">
+        <fieldset>
+            <legend>Save Teacher</legend>
+            <span class="success">@ViewBag.SaveMessage</span>
+            <span class="error">@ViewBag.ExErrorMessage</span>
+            <div class="form-group">
+                <label for="Name" class="col-lg-2 control-label">Name</label>
+                <div class="col-lg-10">
+                    <input class="form-control" id="Name" name="Name" placeholder="Name" type="text"><span class="error">@ViewBag.NameErrorMessage</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="Address" class="col-lg-2 control-label">Address</label>
+                <div class="col-lg-10">
+                    <input class="form-control" id="Address" name="Address" placeholder="Address" type="text"><span class="error">@ViewBag.AddressErrorMessage</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="Email" class="col-lg-2 control-label">Email</label>
+                <div class="col-lg-10">
+                    <input class="form-control" id="Email" name="Email" placeholder="Email" type="text"><span class="error">@ViewBag.EmailErrorMessage</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="ContactNo" class="col-lg-2 control-label">ContactNo</label>
+                <div class="col-lg-10">
+                    <input class="form-control" id="ContactNo" name="ContactNo" placeholder="ContactNo" type="text"><span class="error">@ViewBag.ContactNoErrorMessage</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="DesignationId" class="col-lg-2 control-label">Designation</label>
+                <div class="col-lg-10">
+                    <select class="form-control" id="DesignationId" name="DesignationId">
+                        <option value="">--Select--</option>
+                        @if (listOfDesignations != null)
+                        {
+                            foreach (Designation designation in listOfDesignations)
+                            {
+                                <option value="@designation.Id">@designation.Name</option>
+                            }
+                        }
+                    </select>
+                    <span class="error">@ViewBag.DesignationErrorMessage</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="DepartmentId" class="col-lg-2 control-label">Department</label>
+                <div class="col-lg-10">
+                    <select class="form-control" id="DepartmentId" name="DepartmentId">
+                        <option value="">--Select--</option>
+                        @if (listOfDepartment != null)
+                        {
+                            foreach (Department dept in listOfDepartment)
+                            {
+                                <option value="@dept.Id">@dept.Name</option>
+                            }
+                        }
+                    </select>
+                    <span class="error">@ViewBag.DepartmentErrorMessage</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="CreditToBeTaken" class="col-lg-2 control-label">Credit To Be Taken</label>
+                <div class="col-lg-10">
+                    <input class="form-control" id="CreditToBeTaken" name="CreditToBeTaken" placeholder="CreditToBeTaken" type="text"><span class="error">@ViewBag.CreditToBeTakenErrorMessage</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-lg-10 col-lg-offset-2">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</div>
+
+@section scripts
+{
+    <script src="~/Scripts/jquery-2.2.3.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#myForm").validate({
+                rules: {
+                    Name: "required",
+                    Address: "required",
+                    Email: {
+                        required: true,
+                        email: true
+                    },
+                    ContactNo: "required",
+                    CreditToBeTaken: {
+                        required: true,
+                        number: true
+                    }
+                },
+
+                messages: {
+                    Name: "Please provide name.",
+                    Address: "Please provide address.",
+                    Email: {
+                        required: "Please provide email.",
+                        email: "Invelid email."
+                    },
+                    ContactNo: "Please provide conatact number.",
+                    CreditToBeTaken: {
+                        required: "Please provide credit to be taken.",
+                        number: "Credit should be numeric."
+                    }
+                }
+            });
+        });
+    </script>
+}
