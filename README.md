@@ -5,10 +5,10 @@ A university course management system for BASIS Institute of Technology &amp; Ma
 
  * Author               : Team Inception
  * Copyright            : © 2016 Jeshad Khan.
- * ------------------------------------------------------------------------------
+ ------------------------------------------------------------------------------
  * Developed By         : Jeshad Khan
  * Profile              : www.jeshadkhan.com
- * ------------------------------------------------------------------------------
+ ------------------------------------------------------------------------------
  * Title                : Simple University Management System (SUMS)
  * Version              : 1.0
  * License              : Licensed under MIT <http://opensource.org/licenses/MIT>
